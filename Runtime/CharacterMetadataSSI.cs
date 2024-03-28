@@ -8,8 +8,8 @@ namespace AmoyFeels.SpriteShaderIntegration
     public class CharacterMetadataSSI : CustomMetadata<SpriteCharacterSSI>
     {
         public Material SampleMaterial;
-        /*[HideInInspector]*/ public List<string> Properties = new List<string>();
-       /* [HideInInspector]*/ public List<PropertyType> Types = new List<PropertyType>();
+        [HideInInspector] public List<string> Properties = new List<string>();
+        [HideInInspector] public List<PropertyType> Types = new List<PropertyType>();
 
         public IDictionary<string, float> GetPropertyFloats()
         {

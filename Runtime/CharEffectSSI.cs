@@ -34,8 +34,11 @@ namespace AmoyFeels.SpriteShaderIntegration
 
             if (Assigned(EffectDefault) && EffectDefault == true)
             {
+#if NANINOVEL_1_20
+                var meta = spriteCharacterSSI.ActorMeta.GetCustomData<CharacterMetadataSSI>();
+#else
                 var meta = spriteCharacterSSI.ActorMetadata.GetCustomData<CharacterMetadataSSI>();
-
+#endif
                 var propColors = meta.GetPropertyColors().Where(x => !transitionalSprite.GetColor(x.Key).Equals(x.Value)).ToDictionary(x => x.Key, x => x.Value);
                 var propFloat = meta.GetPropertyFloats().Where(x => transitionalSprite.GetFloat(x.Key) != x.Value).ToDictionary(x => x.Key, x => x.Value);
                 var propInt = meta.GetPropertyInt().Where(x => transitionalSprite.GetInt(x.Key) != x.Value).ToDictionary(x => x.Key, x => (float)x.Value);

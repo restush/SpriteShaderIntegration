@@ -8,33 +8,50 @@ namespace AmoyFeels.SpriteShaderIntegration
     public class SpriteCharacterSSI : SpriteActor<CharacterMetadata>, ICharacterActor
     {
         private readonly IStateManager _stateManager;
+#if NANINOVEL_1_20
+        public SpriteCharacterSSI(string id, CharacterMetadata metadata, StandaloneAppearanceLoader<Texture2D> loader) : base(id, metadata, loader)
+#else
         public SpriteCharacterSSI(string id, CharacterMetadata metadata) : base(id, metadata)
+#endif
         {
             _stateManager = Engine.GetService<StateManager>();
             _stateManager.OnRollbackStarted += CompleteAllTweeners;
-            _stateManager.OnGameSaveStarted += (s)=> CompleteAllTweeners();
-            _stateManager.OnGameLoadStarted += (s)=> CompleteAllTweeners();
+            _stateManager.OnGameSaveStarted += (s) => CompleteAllTweeners();
+            _stateManager.OnGameLoadStarted += (s) => CompleteAllTweeners();
         }
 
         public CharacterLookDirection LookDirection
         {
+
+#if NANINOVEL_1_20
+            get => TransitionalRenderer.GetLookDirection(ActorMeta.BakedLookDirection);
+            set => TransitionalRenderer.SetLookDirection(value, ActorMeta.BakedLookDirection);
+#else
             get => TransitionalRenderer.GetLookDirection(ActorMetadata.BakedLookDirection);
             set => TransitionalRenderer.SetLookDirection(value, ActorMetadata.BakedLookDirection);
+#endif
         }
 
         public UniTask ChangeLookDirectionAsync(CharacterLookDirection lookDirection, float duration,
             EasingType easingType = default, AsyncToken asyncToken = default)
         {
             return TransitionalRenderer.ChangeLookDirectionAsync(lookDirection,
-                ActorMetadata.BakedLookDirection, duration, easingType, asyncToken);
+#if NANINOVEL_1_20
+                ActorMeta.BakedLookDirection,
+#else
+                ActorMetadata.BakedLookDirection,
+#endif
+
+                duration, easingType, asyncToken);
         }
 
-        GameObject gameObject;
-        LocalizableResourceLoader<Texture2D> appearanceLoader;
-        TransitionalSpriteSSI transitionalRenderer;
+
 
         public override GameObject GameObject => gameObject;
+#if NANINOVEL_1_20
+#else
         protected override LocalizableResourceLoader<Texture2D> AppearanceLoader => appearanceLoader;
+#endif
         protected override TransitionalRenderer TransitionalRenderer => transitionalRenderer;
 
         public TransitionalSpriteSSI GetTransitionalSpriteSSI()
@@ -50,6 +67,9 @@ namespace AmoyFeels.SpriteShaderIntegration
         Dictionary<string, Tweener<FloatTween>> tweenerFloat = new Dictionary<string, Tweener<FloatTween>>();
         Dictionary<string, Tweener<ColorTween>> tweenerColor = new Dictionary<string, Tweener<ColorTween>>();
         Dictionary<string, Tweener<FloatTween>> tweenerInt = new Dictionary<string, Tweener<FloatTween>>();
+        private LocalizableResourceLoader<Texture2D> appearanceLoader;
+        TransitionalSpriteSSI transitionalRenderer;
+        GameObject gameObject;
 
         public void CompleteAllTweeners()
         {
@@ -136,11 +156,8 @@ namespace AmoyFeels.SpriteShaderIntegration
                     }
                     FloatTween floatTween = default;
 
-#if UNITY_2021_1_OR_NEWER
-                    floatTween = new FloatTween(transitionalRenderer.GetInt(propertyID), toValue, duration, value => transitionalRenderer.SetInteger(propertyID, (int)value), false, easingType);
-#else
                     floatTween = new FloatTween(transitionalRenderer.GetInt(propertyID), toValue, duration, value => transitionalRenderer.SetInt(propertyID, (int)value), false, easingType);
-#endif
+
                     Tweener<FloatTween> tweener = new Tweener<FloatTween>(floatTween/*, hasCompleted ? new System.Action(() => _stateManager.PushRollbackSnapshot()) : default*/);
                     this.tweenerInt.Add(itemFloat.Key, tweener);
                     tasks.Add(tweener.RunAsync(floatTween, asyncToken, transitionalRenderer));
@@ -186,7 +203,11 @@ namespace AmoyFeels.SpriteShaderIntegration
         public override UniTask InitializeAsync()
         {
             gameObject = CreateHostObject();
+
+#if NANINOVEL_1_20
+#else
             appearanceLoader = ConstructAppearanceLoader(ActorMetadata);
+#endif
             AppearanceLoader.OnLocalized += HandleAppearanceLocalized;
             transitionalRenderer = CreateRuntimeSprite();
             SetVisibility(false);
@@ -196,11 +217,22 @@ namespace AmoyFeels.SpriteShaderIntegration
         private TransitionalSpriteSSI CreateRuntimeSprite()
         {
             var actorObject = gameObject;
-            var actorMetadata = ActorMetadata;
+            var actorMetadata =
+
+#if NANINOVEL_1_20
+                ActorMeta;
+#else
+                ActorMetadata;
+#endif
             var spriteRenderer = actorObject.AddComponent<TransitionalSpriteSSI>();
             var (matchMode, matchRatio) = (AspectMatchMode.Disable, 0);
             spriteRenderer.Initialize(actorMetadata.Pivot, actorMetadata.PixelsPerUnit, false, matchMode, matchRatio,
-                actorMetadata.CustomTextureShader, actorMetadata.CustomSpriteShader, ActorMetadata.GetCustomData<CharacterMetadataSSI>().SampleMaterial);
+                actorMetadata.CustomTextureShader, actorMetadata.CustomSpriteShader,
+#if NANINOVEL_1_20
+                ActorMeta.GetCustomData<CharacterMetadataSSI>().SampleMaterial);
+#else
+                ActorMetadata.GetCustomData<CharacterMetadataSSI>().SampleMaterial);
+#endif
             spriteRenderer.DepthPassEnabled = actorMetadata.EnableDepthPass;
             spriteRenderer.DepthAlphaCutoff = actorMetadata.DepthAlphaCutoff;
             return spriteRenderer;
