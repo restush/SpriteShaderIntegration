@@ -35,3 +35,7 @@ But now int is available in Unity 2021.1 and newer.
 ````nani
 @charEffect Kohaku effectInt:_HologramFade.0.5
 ````
+
+### Tested Shader
+- All In 1 Sprite Shader
+- Sprite Shaders Ultimate
