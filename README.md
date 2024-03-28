@@ -13,9 +13,7 @@ This is an extension of Naninovel to help easily integrate with most popular spr
 ![](https://github.com/restush/SpriteShaderIntegration/blob/resources-branch/SSI-demo3%20-%20Made%20with%20Clipchamp.gif)
 
 
-### Scripts
-
-#### Property float
+### Property float
 ````nani
 @charEffect Kohaku effectFloat:_HologramFade.0.5
 ````
@@ -23,7 +21,7 @@ Mutiple effects of float
 ````nani
 @charEffect Kohaku effectFloat:_HologramFade.0.5,_Shadow.0.25,_Fade.1.0
 ````
-#### Property color
+### Property color
 The color is insensitive case.
 Can type uppercase or lowercase. Must write # in prefix. (Todo: next update, can type both without # or with #) 
 ````nani
@@ -33,7 +31,7 @@ Mutiple effects of color
 ````nani
 @charEffect Kohaku effectColor:_HologramTint.#43BF15,_ShadowColor.#2d2f36,_Tint.#02114f
 ````
-#### Property int (only 2021.1 and newer)
+### Property int (only 2021.1 and newer)
 Most shader, use float property rather than int.
 But now int is available in Unity 2021.1 and newer.
 ````nani
@@ -44,13 +42,13 @@ Mutiple effects of int
 @charEffect Kohaku effectInt:_HologramFade.0,_Shadow.1,_Fade.2
 ````
 
-#### You can assignee multiple property with different type at same time
+### You can assignee multiple property with different type at same time
 This will be execute `effectFloat`, `effectColor`, and `effectInt` at same time.
 ````nani
 @charEffect Kohaku effectFloat:_HologramFade.0.5,_Shadow.0.25,_Fade.1.0 effectColor:_HologramTint.#43BF15,_ShadowColor.#2d2f36,_Tint.#02114f effectInt:_HologramFade.0,_Shadow.1,_Fade.2
 ````
 
-#### Control animate duration
+### Control animate duration
 The default transition/duration of effect is based on `Default Duration` on `Character Configuration`.\
 Below `_HologramFade` will transiting with default duration.
 ````nani
