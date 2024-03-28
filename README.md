@@ -39,3 +39,10 @@ But now int is available in Unity 2021.1 and newer.
 ### Tested Shader
 - All In 1 Sprite Shader
 - Sprite Shaders Ultimate
+
+### How to download
+You can download Unity Package in releases tab or clone this git.
+
+### How to install/setup
+You can read documentation included in Unity Package or [download here](https://github.com/restush/SpriteShaderIntegration/blob/main/Documentation%20-%20SpriteShaderIntegration%20(SSI)%20for%20Naninovel.pdf)
+ 
