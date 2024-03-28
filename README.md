@@ -19,7 +19,7 @@ This is an extension of Naninovel to help easily integrate with most popular spr
 ````nani
 @charEffect Kohaku effectFloat:_HologramFade.0.5
 ````
-Mutiple effects
+Mutiple effects of float
 ````nani
 @charEffect Kohaku effectFloat:_HologramFade.0.5,_Shadow.0.25,_Fade.1.0
 ````
@@ -29,7 +29,7 @@ Can type uppercase or lowercase. Must write # in prefix. (Todo: next update, can
 ````nani
 @charEffect Kohaku effectColor:_HologramTint.#43bf15
 ````
-Mutiple effects
+Mutiple effects of color
 ````nani
 @charEffect Kohaku effectColor:_HologramTint.#43BF15,_ShadowColor.#2d2f36,_Tint.#02114f
 ````
@@ -39,7 +39,7 @@ But now int is available in Unity 2021.1 and newer.
 ````nani
 @charEffect Kohaku effectInt:_HologramFade.0
 ````
-Mutiple effects
+Mutiple effects of int
 ````nani
 @charEffect Kohaku effectInt:_HologramFade.0,_Shadow.1,_Fade.2
 ````
