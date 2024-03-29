@@ -63,8 +63,13 @@ Below `_Shadow` will transiting with 3 second of duration.
 - All In 1 Sprite Shader
 - Sprite Shaders Ultimate
 
+### Technical detail
+- Supported version Naninovel 1.19 and 1.20.
+- If you are using Naninovel 1.20, please add `NANINOVEL_1_20` in scripting define symbols
+![](https://i.ibb.co/hDz6pH8/image.png)
+
 ### How to download
-You can download Unity Package in releases tab or clone/download this git.
+You can download Unity Package in [releases tab](https://github.com/restush/SpriteShaderIntegration/releases) or clone/download this git.
 
 ### How to install/setup
 You can read documentation included in Unity Package or this cloned/downloaded git or [download here](https://github.com/restush/SpriteShaderIntegration/blob/main/Documentation%20-%20SpriteShaderIntegration%20(SSI)%20for%20Naninovel.pdf)
