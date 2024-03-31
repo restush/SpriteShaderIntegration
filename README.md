@@ -23,7 +23,7 @@ Mutiple effects of float
 ````
 ### Property color
 The color is insensitive case.
-Can type uppercase or lowercase. Must write # in prefix. (Todo: next update, can type both without # or with #) 
+Can type uppercase or lowercase. Can add `#` on prefix or without it (`#2d2f36` or `2d2f36`).
 ````nani
 @charEffect Kohaku effectColor:_HologramTint.#43bf15
 ````

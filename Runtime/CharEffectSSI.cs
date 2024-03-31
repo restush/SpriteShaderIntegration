@@ -1,8 +1,8 @@
-﻿    using Naninovel;
-    using Naninovel.Commands;
-    using System.Collections.Generic;
-    using System.Linq;
-    using UnityEngine;
+﻿using Naninovel;
+using Naninovel.Commands;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace AmoyFeels.SpriteShaderIntegration
 {
@@ -41,7 +41,7 @@ namespace AmoyFeels.SpriteShaderIntegration
 #endif
                 var propColors = meta.GetPropertyColors().Where(x => !transitionalSprite.GetColor(x.Key).Equals(x.Value)).ToDictionary(x => x.Key, x => x.Value);
                 var propFloat = meta.GetPropertyFloats().Where(x => transitionalSprite.GetFloat(x.Key) != x.Value).ToDictionary(x => x.Key, x => x.Value);
-                var propInt = meta.GetPropertyInt().Where(x => transitionalSprite.GetInt(x.Key) != x.Value).ToDictionary(x => x.Key, x => (float)x.Value);
+                var propInt = meta.GetPropertyInts().Where(x => transitionalSprite.GetInt(x.Key) != x.Value).ToDictionary(x => x.Key, x => (float)x.Value);
                 listTasks.Add(spriteCharacterSSI.ChangeEffectColors(propColors, easingType, duration, asyncToken));
                 listTasks.Add(spriteCharacterSSI.ChangeEffectFloats(propFloat, easingType, duration, asyncToken));
                 listTasks.Add(spriteCharacterSSI.ChangeEffectInts(propInt, easingType, duration, asyncToken));
@@ -70,12 +70,13 @@ namespace AmoyFeels.SpriteShaderIntegration
             return UniTask.WhenAll(listTasks);
 
 
-            Color GetColor(string propertyID, string htmlColor)
+            Color GetColor(string propertyID, string htmlColor) 
             {
                 Color currentColor = transitionalSprite.SpriteMaterial.GetColor(propertyID); // get current shader color
                 ColorMutator currentColorMutator = new ColorMutator(currentColor); // extract color by making ColorMutator
                 float defaultIntensity = currentColorMutator.exposureValue; // get intensity from ColorMutator
 
+                htmlColor = htmlColor.Contains("#") ? htmlColor : "#" + htmlColor;
                 bool successParseColor = ColorUtility.TryParseHtmlString(htmlColor, out Color parsedColor);
                 ColorMutator newColorMutator = new ColorMutator(successParseColor ? parsedColor : currentColor);
                 newColorMutator.exposureValue = defaultIntensity;

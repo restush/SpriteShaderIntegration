@@ -15,7 +15,7 @@ namespace AmoyFeels.SpriteShaderIntegration
         {
             var propertyFloats = Properties
                 .Zip(Types, (k, v) => new { Key = k, Value = v })
-                .Where(x=>x.Value == PropertyType.Float || x.Value == PropertyType.Range)
+                .Where(x => x.Value == PropertyType.Float || x.Value == PropertyType.Range)
                 .ToDictionary(x => x.Key, x => SampleMaterial.GetFloat(x.Key));
 
             return propertyFloats;
@@ -25,13 +25,13 @@ namespace AmoyFeels.SpriteShaderIntegration
         {
             var propertyColors = Properties
                 .Zip(Types, (k, v) => new { Key = k, Value = v })
-                 .Where(x => x.Value == PropertyType.Color)
+                .Where(x => x.Value == PropertyType.Color)
                 .ToDictionary(x => x.Key, x => SampleMaterial.GetColor(x.Key));
 
             return propertyColors;
         }
 
-        public IDictionary<string, int> GetPropertyInt()
+        public IDictionary<string, int> GetPropertyInts()
         {
             var propertyInts = Properties
                 .Zip(Types, (k, v) => new { Key = k, Value = v })

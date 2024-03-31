@@ -96,7 +96,7 @@ namespace AmoyFeels.SpriteShaderIntegration
         public int GetInt(string propertyID)
         {
 #if UNITY_2021_3_OR_NEWER
-        return SpriteMaterial.GetInt(propertyID);
+        return SpriteMaterial.GetInteger(propertyID);
 #else
             return SpriteMaterial.GetInt(propertyID);
 #endif

@@ -70,14 +70,12 @@ namespace AmoyFeels.SpriteShaderIntegration
             [System.Serializable]
             public abstract class EffectState
             {
-                public int IndexID;
                 public string PropertyID;
 
                 public abstract object GetValue();
                 public abstract void SetValue(object value);
-                public void Set(int indexID, string propertyID)
+                public void Set(string propertyID)
                 {
-                    IndexID = indexID;
                     PropertyID = propertyID;
                 }
             }
@@ -89,9 +87,8 @@ namespace AmoyFeels.SpriteShaderIntegration
 
                 public EffectState() { }
 
-                public void Set(int indexID, string propertyID, T value = default)
+                public void Set(string propertyID, T value = default)
                 {
-                    IndexID = indexID;
                     PropertyID = propertyID;
                     Value = value;
                 }
@@ -100,7 +97,7 @@ namespace AmoyFeels.SpriteShaderIntegration
                 public override void SetValue(object value) => Value = (T)value;
                 public override string ToString()
                 {
-                    return "Property ID: " + PropertyID + "| Index: " + IndexID + "| Value: " + Value.ToString();
+                    return "Property ID: " + PropertyID + "| Value: " + Value.ToString();
                 }
             }
 
@@ -168,57 +165,39 @@ namespace AmoyFeels.SpriteShaderIntegration
             {
                 stateManager.OnGameSaveFinished -= Save;
                 var data = new GameState();
-                var floatList = new List<FloatState>();
-                var colorList = new List<ColorState>();
                 List<CharacterShaderState> characterShaderStates = new List<CharacterShaderState>();
 
                 var actors = characterManager.GetAllActors().Where(x => x is SpriteCharacterSSI ss && ss != null).Select(x => x as SpriteCharacterSSI);
                 foreach (var actor in actors)
                 {
-                    var runtimeSprite = actor.GetTransitionalSpriteSSI();
-                    var customMeta = this.CharactersConfiguration.GetMetadataOrDefault(actor.Id).GetCustomData<CharacterMetadataSSI>();
-                    foreach (var prop in customMeta.Properties)
-                    {
-                        var indexProperty = customMeta.Properties.IndexOf(prop);
-                        var typeProperty = customMeta.Types[indexProperty];
+                    var transitionalSprite = actor.GetTransitionalSpriteSSI();
+                    var meta = this.CharactersConfiguration.GetMetadataOrDefault(actor.Id).GetCustomData<CharacterMetadataSSI>();
 
-                        if (typeProperty == CharacterMetadataSSI.PropertyType.Float || typeProperty == CharacterMetadataSSI.PropertyType.Range)
-                        {
-                            float currentFloat = runtimeSprite.GetFloat(prop);
-                            var defaultFloat = GetDefaultValueProperty<float>(actor.Id, prop);
-                            if(defaultFloat == currentFloat)
-                                continue;
-                            floatList.Add(new FloatState()
-                            {
-                                IndexID = indexProperty,
-                                PropertyID = prop,
-                                Value = currentFloat
-                            });
-                        }
-                        else if (typeProperty == CharacterMetadataSSI.PropertyType.Color)
-                        {
-                            Color currentColor = runtimeSprite.GetColor(prop);
-                            var defaultColor = GetDefaultValueProperty<Color>(actor.Id, prop);
-                            if (defaultColor.Equals(currentColor))
-                                continue;
-                            colorList.Add(new ColorState()
-                            {
-                                IndexID = indexProperty,
-                                PropertyID = prop,
-                                Value = currentColor
-                            });
-                        }
-                    }
+                    var propColors = meta.GetPropertyColors()
+                        .Where(x => !transitionalSprite.GetColor(x.Key).Equals(x.Value))
+                        .Select(x => new ColorState() { PropertyID = x.Key, Value = transitionalSprite.GetColor(x.Key) })
+                        .ToArray();
+
+                    var propFloats = meta.GetPropertyFloats()
+                        .Where(x => transitionalSprite.GetFloat(x.Key) != x.Value)
+                        .Select(x => new FloatState() { PropertyID = x.Key, Value = transitionalSprite.GetFloat(x.Key) }).
+                        ToArray();
+
+                    var propInts = meta.GetPropertyInts()
+                        .Where(x => transitionalSprite.GetInt(x.Key) != x.Value)
+                        .Select(x => new IntState() { PropertyID = x.Key, Value = transitionalSprite.GetInt(x.Key) })
+                        .ToArray();
+
                     var charaState = new CharacterShaderState()
                     {
                         characterID = actor.Id,
-                        colorState = colorList.ToArray(),
-                        floatState = floatList.ToArray(),
+                        colorState = propColors,
+                        floatState = propFloats,
+                        intState = propInts,
                     };
                     characterShaderStates.Add(charaState);
-
-
                 }
+
                 data.characterShaderStates = characterShaderStates.ToArray();
                 state.SetState(data);
             }
