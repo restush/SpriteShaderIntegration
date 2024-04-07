@@ -5,8 +5,20 @@ using UnityEngine;
 
 namespace AmoyFeels.SpriteShaderIntegration
 {
+    // Create an attribute to apply to the serialized fields;
+    // don't forget to inherit it from `PropertyAttribute`.
+    public class MaterialEditorSSIAttribute : PropertyAttribute
+    {
+
+        public MaterialEditorSSIAttribute()
+        {
+
+        }
+    }
+
     public class CharacterMetadataSSI : CustomMetadata<SpriteCharacterSSI>
     {
+        [MaterialEditorSSI]
         public Material SampleMaterial;
         [HideInInspector] public List<string> Properties = new List<string>();
         [HideInInspector] public List<PropertyType> Types = new List<PropertyType>();
